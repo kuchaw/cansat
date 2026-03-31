@@ -1,15 +1,15 @@
 const express = require("express");
-const path = require("path");
-
 const app = express();
 
-// allow JSON (for future ESP32 POST)
-app.use(express.json());
-
-// serve your mapa.html
+// serve static files
 app.use(express.static(__dirname));
 
-// test API
+// ROOT ROUTE (THIS FIXES YOUR ERROR)
+app.get("/", (req, res) => {
+  res.sendFile(__dirname + "/mapa.html");
+});
+
+// API
 app.get("/api/telemetry", (req, res) => {
   res.json({
     lat: -42.77,
@@ -17,13 +17,7 @@ app.get("/api/telemetry", (req, res) => {
   });
 });
 
-// (optional) receive data later
-app.post("/api/telemetry", (req, res) => {
-  console.log(req.body);
-  res.sendStatus(200);
-});
-
-// IMPORTANT for deployment
+// port (important for Render)
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
